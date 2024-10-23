@@ -15,7 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install --yes \
-        build-essential cmake curl ca-certificates autoconf automake libtool pkg-config
+    build-essential cmake curl ca-certificates autoconf automake libtool pkg-config
 
 # -----------------------------------------------------------------------------
 
@@ -34,9 +34,9 @@ RUN mkdir -p "lib/Linux-$(uname -m)"
 
 # Download and extract onnxruntime
 RUN curl -L "${ONNXRUNTIME_URL}" | \
-        tar -C "lib/Linux-$(uname -m)" -xzvf - && \
+    tar -C "lib/Linux-$(uname -m)" -xzvf - && \
     mv "lib/Linux-$(uname -m)"/onnxruntime-* \
-       "lib/Linux-$(uname -m)/onnxruntime"
+    "lib/Linux-$(uname -m)/onnxruntime"
 
 # Build minimal version of espeak-ng
 RUN curl -L "https://github.com/rhasspy/espeak-ng/archive/refs/heads/master.tar.gz" | \
@@ -45,13 +45,13 @@ RUN curl -L "https://github.com/rhasspy/espeak-ng/archive/refs/heads/master.tar.
     export CFLAGS='-D_FILE_OFFSET_BITS=64' && \
     ./autogen.sh && \
     ./configure \
-        --without-pcaudiolib \
-        --without-klatt \
-        --without-speechplayer \
-        --without-mbrola \
-        --without-sonic \
-        --with-extdict-cmn \
-        --prefix=/usr && \
+    --without-pcaudiolib \
+    --without-klatt \
+    --without-speechplayer \
+    --without-mbrola \
+    --without-sonic \
+    --with-extdict-cmn \
+    --prefix=/usr && \
     make -j8 src/espeak-ng src/speak-ng && \
     make && \
     make install
@@ -92,9 +92,9 @@ RUN find /usr -type d -name 'espeak-ng-data' -exec cp -R {} ./piper_phonemize/ \
 
 RUN mkdir -p wheelhouse
 RUN if [ "$(which auditwheel)" ]; then \
-    /opt/python/cp39-cp39/bin/pip wheel . && \
-    /opt/python/cp310-cp310/bin/pip wheel . && \
-    /opt/python/cp311-cp311/bin/pip wheel . && \
+    # /opt/python/cp39-cp39/bin/pip wheel . && \
+    # /opt/python/cp310-cp310/bin/pip wheel . && \
+    /opt/python/cp312-cp312/bin/pip wheel . && \
     cp -a "/build/lib/Linux-$(uname -m)/onnxruntime/lib"/libonnxruntime*.so* /usr/lib/ && \
     auditwheel repair *.whl; \
     fi
