@@ -39,9 +39,11 @@ RUN curl -L "${ONNXRUNTIME_URL}" | \
     "lib/Linux-$(uname -m)/onnxruntime"
 
 # Build minimal version of espeak-ng
-RUN curl -L "https://github.com/rhasspy/espeak-ng/archive/refs/heads/master.tar.gz" | \
+# https://github.com/github/codeql/archive/aef66c462abe817e33aad91d97aa782a1e2ad2c7.zip
+# NOTE: that's the commit that was after the `1.1.0` release of `piper-phonemize`. `master` doesn't work for ARM builds and neither did the commit prior to `1.1.0` release.
+RUN curl -L "https://github.com/rhasspy/espeak-ng/archive/7cc6ac2a63a110a49c0d3ae5e105d0ef982d5be7.tar.gz" | \
     tar -xzvf - && \
-    cd espeak-ng-master && \
+    cd espeak-ng-7cc6ac2a63a110a49c0d3ae5e105d0ef982d5be7 && \
     export CFLAGS='-D_FILE_OFFSET_BITS=64' && \
     ./autogen.sh && \
     ./configure \
